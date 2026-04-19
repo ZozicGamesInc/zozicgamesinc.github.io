@@ -39,27 +39,27 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 24px 56px;
-      transition: background 0.3s, padding 0.3s;
-    }
-
-    nav.scrolled {
-      background: rgba(12,12,12,0.95);
+      padding: 14px 56px;
+      background: rgba(255,255,255,0.97);
       backdrop-filter: blur(12px);
-      padding: 16px 56px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      transition: padding 0.3s;
     }
 
-    .nav-logo img { height: 32px; width: auto; }
+    nav.scrolled { padding: 10px 56px; }
 
-    .nav-links {
-      display: flex;
-      gap: 40px;
-      list-style: none;
+    .nav-logo img { height: 28px; width: auto; }
+
+    .nav-logo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.12em;
+      color: #1a1a2e;
     }
 
     .nav-links a {
-      color: rgba(232,232,240,0.7);
+      color: #555;
       text-decoration: none;
       font-size: 0.82rem;
       font-weight: 500;
@@ -80,8 +80,21 @@
       transition: transform 0.2s;
     }
 
-    .nav-links a:hover, .nav-links a.active { color: #fff; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
     .nav-links a.active::after, .nav-links a:hover::after { transform: scaleX(1); }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
 
     .hamburger {
       display: none;
@@ -92,7 +105,7 @@
       border: none;
       padding: 4px;
     }
-    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #333; border-radius: 2px; transition: all 0.3s; }
     .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     .hamburger.open span:nth-child(2) { opacity: 0; }
     .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
@@ -117,9 +130,11 @@
       cursor: pointer;
       padding: 0;
       transition: all 0.3s;
+      display: block;
+      margin: 0 auto;
     }
 
-    .dot-nav button.active { background: #fff; transform: scale(1.4); }
+    .dot-nav button.active { background: #fff; width: 10px; height: 10px; }
     .dot-nav.light button { background: rgba(0,0,0,0.2); }
     .dot-nav.light button.active { background: rgba(0,0,0,0.7); }
 
@@ -317,8 +332,8 @@
     /* GAME */
     #game { padding: 0; height: 100vh; min-height: 100vh; align-items: flex-end; overflow: hidden; }
 
-    .game-video-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-    .game-keyart-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; z-index: 1; }
+    .game-video-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+    .game-keyart-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; z-index: 0; }
 
     .game-overlay {
       position: absolute; inset: 0;
@@ -473,7 +488,7 @@
   <!-- NAV -->
   <nav id="mainNav">
     <a href="#hero" class="nav-logo">
-      <img src="Ci_Logo.png" alt="ZozicGames" />
+      <img src="Ci_small2.png" alt="ZozicGames" />
     </a>
     <button class="hamburger" id="hamburger" aria-label="메뉴">
       <span></span><span></span><span></span>
@@ -649,14 +664,13 @@
   </section>
 
   <!-- FOOTER -->
-  <footer>
-    <img src="Ci_Logo.png" alt="ZozicGames" />
-    <div style="text-align: center;">
-      <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-weight: 500; margin-bottom: 4px;">Zozic Games Inc.</p>
-      <p style="color: rgba(255,255,255,0.25); font-size: 0.68rem; font-family: 'Space Mono', monospace; margin-bottom: 4px;">사업자 등록번호 830-88-03459</p>
-      <p style="color: rgba(255,255,255,0.25); font-size: 0.68rem; font-family: 'Space Mono', monospace;">© 2025 Zozic Games Inc. All rights reserved.</p>
+  <footer style="align-items: center; position: relative;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <p style="color: rgba(255,255,255,0.7); font-size: 0.82rem; font-weight: 500; line-height: 1; font-family: 'Space Mono', monospace;">Zozic Games Inc.</p>
+      <p style="color: rgba(255,255,255,0.45); font-size: 0.72rem; font-family: 'Space Mono', monospace; line-height: 1;">사업자 등록번호 830-88-03459</p>
+      <p style="color: rgba(255,255,255,0.45); font-size: 0.72rem; font-family: 'Space Mono', monospace; line-height: 1;">© 2025 Zozic Games Inc. All rights reserved.</p>
     </div>
-    <a href="https://www.youtube.com/@zozicgames.official" target="_blank" style="color: rgba(255,255,255,0.4); transition: color 0.2s;" onmouseover="this.style.color='#ff0000'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">
+    <a href="https://www.youtube.com/@zozicgames.official" target="_blank" style="color: rgba(255,255,255,0.5); transition: color 0.2s;" onmouseover="this.style.color='#ff0000'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
       </svg>
