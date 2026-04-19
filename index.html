@@ -695,6 +695,14 @@
       mainNav.classList.toggle('scrolled', window.scrollY > 50);
     });
 
+    function updateNav(index) {
+      if (index === 0) {
+        mainNav.classList.remove('scrolled');
+      } else {
+        mainNav.classList.add('scrolled');
+      }
+    }
+
     // 햄버거
     hamburger.addEventListener('click', () => {
       hamburger.classList.toggle('open');
@@ -715,6 +723,7 @@
       isScrolling = true;
       sectionEls[index].scrollIntoView({ behavior: 'smooth' });
       updateUI(index);
+      updateNav(index);
       setTimeout(() => { isScrolling = false; }, 900);
     }
 
@@ -747,6 +756,12 @@
 
     // 점 클릭
     dots.forEach((d, i) => d.addEventListener('click', () => goToSection(i)));
+
+    // 로고 클릭시 첫 섹션으로
+    document.querySelector('.nav-logo').addEventListener('click', e => {
+      e.preventDefault();
+      goToSection(0);
+    });
 
     // 네비 링크
     navLinks.forEach(link => {
