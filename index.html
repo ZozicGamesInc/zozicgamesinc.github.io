@@ -4,39 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ZozicGames Inc. | 주식회사 조직게임즈</title>
-  <meta name="description" content="작지만 단단한 인디 게임 스튜디오, 주식회사 조직게임즈. 스킬 마법사 키우기 개발사." />
+  <meta name="description" content="창의적이고 재미있는 게임을 만드는 인디 모바일 게임 스튜디오, 주식회사 조직게임즈." />
   <meta name="keywords" content="조직게임즈, ZozicGames, 인디게임, 스킬 마법사 키우기, 모바일게임" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;500;700&family=Space+Mono&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --surface2: #1a1a28;
+      --bg: #0c0c0c;
       --accent: #ff6b2b;
-      --accent2: #ffb347;
       --text: #e8e8f0;
-      --muted: #6b6b88;
-      --border: #2a2a3a;
+      --muted: #888;
+      --border: rgba(255,255,255,0.1);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
+    html { scrollbar-width: none; scroll-behavior: smooth; }
+    html::-webkit-scrollbar { display: none; }
 
     body {
       background: var(--bg);
       color: var(--text);
       font-family: 'Noto Sans KR', sans-serif;
-      font-weight: 300;
-      line-height: 1.7;
+      font-weight: 400;
       overflow-x: hidden;
     }
 
-    /* ── NAV ── */
+    /* NAV */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -44,1012 +39,723 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px 48px;
-      background: rgba(10,10,15,0.85);
+      padding: 24px 56px;
+      transition: background 0.3s, padding 0.3s;
+    }
+
+    nav.scrolled {
+      background: rgba(12,12,12,0.95);
       backdrop-filter: blur(12px);
+      padding: 16px 56px;
       border-bottom: 1px solid var(--border);
     }
 
-    .nav-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.6rem;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      text-decoration: none;
-    }
+    .nav-logo img { height: 32px; width: auto; }
 
     .nav-links {
       display: flex;
-      gap: 36px;
+      gap: 40px;
       list-style: none;
     }
 
     .nav-links a {
-      color: var(--muted);
+      color: rgba(232,232,240,0.7);
       text-decoration: none;
       font-size: 0.82rem;
-      letter-spacing: 0.08em;
+      font-weight: 500;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       transition: color 0.2s;
+      position: relative;
+      padding-bottom: 4px;
     }
 
-    .nav-links a:hover { color: var(--accent); }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transition: transform 0.2s;
+    }
 
-    /* ── HERO ── */
-    #hero {
+    .nav-links a:hover, .nav-links a.active { color: #fff; }
+    .nav-links a.active::after, .nav-links a:hover::after { transform: scaleX(1); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* 점 네비 */
+    .dot-nav {
+      position: fixed;
+      right: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dot-nav button {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.3s;
+    }
+
+    .dot-nav button.active { background: #fff; transform: scale(1.4); }
+    .dot-nav.light button { background: rgba(0,0,0,0.2); }
+    .dot-nav.light button.active { background: rgba(0,0,0,0.7); }
+
+    /* SCROLL DOWN */
+    .scroll-down {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.35);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      animation: bounce 2s infinite;
+      pointer-events: none;
+    }
+
+    .scroll-down.dark { color: rgba(0,0,0,0.25); }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* SECTIONS */
+    section {
+      position: relative;
       min-height: 100vh;
       display: flex;
       align-items: center;
-      padding: 120px 48px 80px;
-      position: relative;
-      overflow: hidden;
+      justify-content: center;
     }
 
-    .hero-bg {
+    /* HERO */
+    #hero { background: #0c0c0c; overflow: hidden; }
+
+    .hero-watermark {
       position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 70% 50%, rgba(255,107,43,0.12) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 60% at 20% 80%, rgba(255,179,71,0.06) 0%, transparent 60%);
+      left: -8%; top: 50%;
+      transform: translateY(-50%);
+      width: 58%;
+      opacity: 0.05;
+      pointer-events: none;
+      filter: brightness(0) invert(1);
     }
 
-    .hero-grid {
+    .hero-glow {
       position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,107,43,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,107,43,0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+      right: 0; top: 0; bottom: 0; width: 50%;
+      background: radial-gradient(ellipse 60% 70% at 80% 50%, rgba(255,107,43,0.07), transparent);
+      pointer-events: none;
     }
 
     .hero-content {
       position: relative;
-      max-width: 720px;
+      z-index: 2;
+      width: 100%;
+      max-width: 1200px;
+      padding: 0 56px;
+      display: flex;
+      justify-content: flex-end;
     }
 
-    .hero-tag {
-      display: inline-block;
+    .hero-text { text-align: right; max-width: 580px; }
+
+    .hero-label {
       font-family: 'Space Mono', monospace;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--accent);
-      border: 1px solid var(--accent);
-      padding: 4px 12px;
-      letter-spacing: 0.1em;
-      margin-bottom: 28px;
-      animation: fadeUp 0.6s ease both;
+      letter-spacing: 0.2em;
+      margin-bottom: 20px;
     }
 
     .hero-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(3.5rem, 9vw, 7rem);
-      line-height: 0.95;
-      letter-spacing: 0.02em;
-      margin-bottom: 28px;
-      animation: fadeUp 0.6s 0.1s ease both;
+      font-weight: 700;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      line-height: 1.3;
+      margin-bottom: 20px;
+      animation: fadeUp 0.8s ease both;
     }
 
     .hero-title span { color: var(--accent); }
 
     .hero-sub {
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 480px;
-      margin-bottom: 44px;
-      animation: fadeUp 0.6s 0.2s ease both;
+      font-size: 0.95rem;
+      color: rgba(232,232,240,0.65);
+      line-height: 1.8;
+      margin-bottom: 40px;
+      animation: fadeUp 0.8s 0.15s ease both;
     }
 
-    .hero-cta {
+    .hero-btns {
       display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      animation: fadeUp 0.6s 0.3s ease both;
+      gap: 14px;
+      justify-content: flex-end;
+      animation: fadeUp 0.8s 0.3s ease both;
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 13px 28px;
+      padding: 12px 28px;
       font-size: 0.85rem;
       font-weight: 500;
-      letter-spacing: 0.06em;
       text-decoration: none;
-      border-radius: 2px;
+      border-radius: 3px;
       transition: all 0.2s;
+      letter-spacing: 0.04em;
       cursor: pointer;
+      border: none;
+      font-family: 'Noto Sans KR', sans-serif;
     }
 
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      border: 2px solid var(--accent);
-    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #e55a1e; }
+    .btn-secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .btn-secondary:hover { border-color: #fff; }
 
-    .btn-primary:hover {
-      background: transparent;
-      color: var(--accent);
-    }
+    /* ABOUT */
+    #about { background: #111; }
 
-    .btn-secondary {
-      background: transparent;
-      color: var(--text);
-      border: 2px solid var(--border);
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .btn svg { width: 16px; height: 16px; }
-
-    /* ── SECTION COMMON ── */
-    section {
-      padding: 100px 48px;
+    .about-wrap {
+      width: 100%;
+      max-width: 1100px;
+      padding: 0 56px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
     }
 
     .section-label {
       font-family: 'Space Mono', monospace;
       font-size: 0.7rem;
       color: var(--accent);
-      letter-spacing: 0.15em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       margin-bottom: 16px;
     }
 
     .section-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-size: clamp(2.5rem, 5vw, 4rem);
       letter-spacing: 0.04em;
-      line-height: 1;
-      margin-bottom: 48px;
+      line-height: 1.05;
+      margin-bottom: 28px;
     }
 
-    .divider {
-      width: 40px;
-      height: 3px;
-      background: var(--accent);
-      margin-bottom: 48px;
+    .about-desc p {
+      font-size: 0.95rem;
+      color: rgba(232,232,240,0.75);
+      line-height: 1.9;
+      margin-bottom: 16px;
     }
 
-    /* ── GAME ── */
-    #game {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
+    .about-desc p strong { color: #fff; font-weight: 500; }
 
-    .game-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .game-screenshots {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .screenshot-placeholder {
-      aspect-ratio: 9/16;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 0.7rem;
+    .history-label {
       font-family: 'Space Mono', monospace;
-      letter-spacing: 0.05em;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.2s;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-align: right;
+      margin-bottom: 16px;
     }
 
-    .screenshot-placeholder:first-child {
-      grid-row: span 2;
-      aspect-ratio: 9/19;
+    .history-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      letter-spacing: 0.04em;
+      line-height: 1.05;
+      text-align: right;
+      margin-bottom: 32px;
     }
 
-    .screenshot-placeholder:hover { border-color: var(--accent); }
-
-    .screenshot-placeholder::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, rgba(255,107,43,0.05), transparent 70%);
+    .history-year {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 16px;
     }
 
-    .screenshot-placeholder svg {
-      width: 32px;
-      height: 32px;
-      opacity: 0.3;
+    .history-item { display: flex; gap: 20px; margin-bottom: 12px; }
+    .history-month { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--accent); width: 32px; flex-shrink: 0; padding-top: 3px; }
+    .history-item span { font-size: 0.9rem; color: rgba(232,232,240,0.8); line-height: 1.6; }
+
+    /* GAME */
+    #game { padding: 0; height: 100vh; min-height: 100vh; align-items: flex-end; overflow: hidden; }
+
+    .game-video-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .game-keyart-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; z-index: 1; }
+
+    .game-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(12,12,12,0.92) 0%, rgba(12,12,12,0.4) 50%, rgba(12,12,12,0.1) 100%);
+      z-index: 2;
     }
 
-    .game-info .game-badge {
+    .game-top-links { position: absolute; top: 100px; right: 56px; z-index: 4; }
+
+    .game-top-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255,107,43,0.12);
-      border: 1px solid rgba(255,107,43,0.3);
-      color: var(--accent2);
-      padding: 4px 12px;
-      border-radius: 2px;
-      font-size: 0.72rem;
-      font-family: 'Space Mono', monospace;
-      margin-bottom: 20px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 8px 18px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 500;
+      transition: all 0.2s;
     }
 
-    .game-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      letter-spacing: 0.04em;
-      margin-bottom: 16px;
-      line-height: 1.1;
-    }
+    .game-top-btn:hover { background: rgba(255,107,43,0.3); border-color: var(--accent); }
 
-    .game-desc {
-      color: var(--muted);
-      font-size: 0.95rem;
-      margin-bottom: 32px;
-      line-height: 1.8;
-    }
+    .game-info { position: relative; z-index: 3; width: 100%; padding: 0 56px 72px; }
+    .game-title { font-weight: 700; font-size: clamp(2rem, 4vw, 3.2rem); margin-bottom: 10px; text-shadow: 0 2px 20px rgba(0,0,0,0.8); }
+    .game-desc { font-size: 0.95rem; color: rgba(232,232,240,0.75); line-height: 1.7; margin-bottom: 28px; }
 
-    .store-links {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 32px;
-    }
+    .store-links { display: flex; gap: 10px; flex-wrap: wrap; }
 
     .store-btn {
       display: inline-flex;
       align-items: center;
-      gap: 14px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 12px 20px;
-      text-decoration: none;
-      color: var(--text);
-      transition: all 0.2s;
-      max-width: 220px;
-    }
-
-    .store-btn:hover {
-      border-color: var(--accent);
-      background: rgba(255,107,43,0.06);
-    }
-
-    .store-btn .store-icon {
-      width: 28px;
-      height: 28px;
-      flex-shrink: 0;
-    }
-
-    .store-btn .store-text small {
-      display: block;
-      font-size: 0.62rem;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-    }
-
-    .store-btn .store-text strong {
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    /* video placeholder */
-    .video-placeholder {
-      aspect-ratio: 16/9;
-      background: var(--surface2);
-      border: 1px solid var(--border);
+      gap: 8px;
+      background: #000;
+      border: 1.5px solid rgba(255,255,255,0.25);
       border-radius: 8px;
+      padding: 9px 18px;
+      text-decoration: none;
+      color: #fff;
+      transition: all 0.2s;
+      min-width: 148px;
+    }
+
+    .store-btn:hover { border-color: rgba(255,255,255,0.6); transform: translateY(-2px); }
+    .store-btn .store-icon { width: 22px; height: 22px; flex-shrink: 0; }
+    .store-btn .store-text small { display: block; font-size: 0.56rem; color: rgba(255,255,255,0.6); }
+    .store-btn .store-text strong { font-size: 0.88rem; font-weight: 700; }
+
+    /* BENEFITS */
+    #benefits { background: #f7f7f7; }
+
+    .benefits-wrap { width: 100%; max-width: 1100px; padding: 0 56px; }
+    #benefits .section-label { color: var(--accent); }
+
+    .benefits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 36px; }
+
+    .benefit-card {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 22px 24px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 0.75rem;
-      font-family: 'Space Mono', monospace;
-      cursor: pointer;
-      transition: border-color 0.2s;
-      position: relative;
-      overflow: hidden;
+      gap: 18px;
+      transition: box-shadow 0.2s, transform 0.2s;
     }
 
-    .video-placeholder:hover { border-color: var(--accent); }
+    .benefit-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); transform: translateY(-2px); }
+    .benefit-icon { font-size: 1.8rem; width: 44px; text-align: center; flex-shrink: 0; }
+    .benefit-title { font-size: 0.92rem; font-weight: 700; color: #111; margin-bottom: 3px; }
+    .benefit-desc { font-size: 0.78rem; color: #888; line-height: 1.5; }
 
-    .play-btn {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: rgba(255,107,43,0.15);
-      border: 2px solid var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--accent);
-      transition: background 0.2s;
-    }
+    /* CAREERS */
+    #careers { background: #0c0c0c; }
 
-    .video-placeholder:hover .play-btn { background: rgba(255,107,43,0.3); }
+    .careers-wrap { text-align: center; max-width: 600px; padding: 0 24px; }
 
-    /* ── ABOUT ── */
-    #about { max-width: 1100px; margin: 0 auto; }
-
-    .about-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: start;
-    }
-
-    .about-text p {
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.9;
+    .careers-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 8vw, 6rem);
+      letter-spacing: 0.04em;
+      color: #fff;
+      line-height: 1;
       margin-bottom: 20px;
     }
 
-    .about-text p strong {
-      color: var(--text);
-      font-weight: 500;
-    }
+    .careers-desc { font-size: 1rem; color: rgba(232,232,240,0.65); line-height: 1.8; margin-bottom: 40px; }
+    .careers-desc strong { color: #fff; }
 
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
-      margin-top: 8px;
-    }
-
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 28px 24px;
-    }
-
-    .stat-card .num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.8rem;
-      color: var(--accent);
-      letter-spacing: 0.04em;
-      line-height: 1;
-    }
-
-    .stat-card .label {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 4px;
-      letter-spacing: 0.05em;
-    }
-
-    /* ── BENEFITS ── */
-    #benefits {
-      border-top: 1px solid var(--border);
-    }
-
-    .benefits-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .benefits-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-    }
-
-    .benefit-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 40px 32px;
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .benefit-card:hover {
-      border-color: var(--accent);
-      background: rgba(255,107,43,0.03);
-    }
-
-    .benefit-icon {
-      font-size: 2rem;
-      margin-bottom: 16px;
-    }
-
-    .benefit-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem;
-      letter-spacing: 0.06em;
-      margin-bottom: 10px;
-      color: var(--text);
-    }
-
-    .benefit-desc {
-      font-size: 0.85rem;
-      color: var(--muted);
-      line-height: 1.75;
-    }
-
-    @media (max-width: 768px) {
-      .benefits-grid { grid-template-columns: 1fr; }
-    }
-
-    /* ── HISTORY ── */
-    #history {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .history-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .timeline {
-      position: relative;
-      margin-top: 0;
-      padding-left: 0;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 120px;
-      top: 0; bottom: 0;
-      width: 1px;
-      background: var(--border);
-    }
-
-    .timeline-item {
-      display: flex;
-      gap: 40px;
-      align-items: flex-start;
-      padding: 28px 0;
-      border-bottom: 1px solid var(--border);
-      position: relative;
-    }
-
-    .timeline-item:last-child { border-bottom: none; }
-
-    .timeline-date {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--accent);
-      width: 120px;
-      flex-shrink: 0;
-      padding-top: 4px;
-      letter-spacing: 0.06em;
-    }
-
-    .timeline-dot {
-      position: absolute;
-      left: 116px;
-      top: 34px;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: 2px solid var(--bg);
-      box-shadow: 0 0 0 1px var(--accent);
-    }
-
-    .timeline-content {
-      padding-left: 24px;
-    }
-
-    .timeline-content h3 {
-      font-size: 1rem;
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    .timeline-content p {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    /* ── CAREERS ── */
-    #careers {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-    }
-
-    .careers-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .careers-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      margin-bottom: 60px;
-    }
-
-    .careers-desc {
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.9;
-      padding-top: 8px;
-    }
-
-    .values-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-    }
-
-    .value-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 36px 28px;
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .value-card:hover {
-      border-color: var(--accent);
-      background: rgba(255,107,43,0.03);
-    }
-
-    .value-icon {
-      font-size: 1.8rem;
-      margin-bottom: 16px;
-    }
-
-    .value-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem;
-      letter-spacing: 0.06em;
-      margin-bottom: 10px;
-      color: var(--text);
-    }
-
-    .value-desc {
-      font-size: 0.85rem;
-      color: var(--muted);
-      line-height: 1.75;
-    }
-
-    .open-positions {
-      margin-top: 60px;
-      padding-top: 48px;
-      border-top: 1px solid var(--border);
-    }
-
-    .positions-title {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 24px;
-    }
-
-    .position-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .position-name {
-      font-size: 1rem;
-      font-weight: 500;
-    }
-
-    .position-type {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--muted);
-      background: var(--surface2);
-      padding: 4px 10px;
-      border-radius: 2px;
-    }
-
-    .position-arrow {
-      color: var(--accent);
-      font-size: 1.1rem;
-    }
-
-    /* ── CONTACT ── */
-    #contact {
-      max-width: 1100px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    #contact .section-title { margin-bottom: 16px; }
-
-    .contact-sub {
-      color: var(--muted);
-      margin-bottom: 44px;
-      font-size: 1rem;
-    }
-
-    .contact-links {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 48px;
+      background: #080808;
+      padding: 28px 56px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: var(--muted);
-      font-size: 0.78rem;
-      font-family: 'Space Mono', monospace;
+      border-top: 1px solid rgba(255,255,255,0.06);
     }
 
-    .footer-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.2rem;
-      color: var(--accent);
-      letter-spacing: 0.1em;
-    }
+    footer img { height: 24px; opacity: 0.5; filter: brightness(0) invert(1); }
+    footer p { font-size: 0.72rem; color: rgba(255,255,255,0.3); font-family: 'Space Mono', monospace; }
 
-    /* ── ANIMATIONS ── */
+    /* ANIMATIONS */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── RESPONSIVE ── */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-      nav { padding: 16px 24px; }
-      .nav-links { display: none; }
-      section { padding: 70px 24px; }
-      #hero { padding: 100px 24px 60px; }
-      .game-inner, .about-inner, .careers-header { grid-template-columns: 1fr; gap: 40px; }
-      .values-grid { grid-template-columns: 1fr; }
-      footer { flex-direction: column; gap: 12px; text-align: center; }
-      .stat-grid { grid-template-columns: 1fr 1fr; }
+      nav { padding: 18px 24px; }
+      nav.scrolled { padding: 14px 24px; }
+      .hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: 64px; left: 0; right: 0;
+        background: rgba(12,12,12,0.98);
+        flex-direction: column;
+        gap: 0;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+        z-index: 99;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li a { display: block; padding: 14px 24px; color: rgba(255,255,255,0.8); border-bottom: 1px solid rgba(255,255,255,0.05); }
+      .nav-links a::after { display: none; }
+      .dot-nav { display: none; }
+      .hero-content { padding: 0 24px; justify-content: center; }
+      .hero-text { text-align: center; }
+      .hero-btns { justify-content: center; }
+      .about-wrap { grid-template-columns: 1fr; gap: 48px; padding: 0 24px; }
+      .history-title, .history-label { text-align: left; }
+      .game-info { padding: 0 24px 60px; }
+      .game-top-links { right: 24px; top: 80px; }
+      .store-btn { flex: 1; min-width: 140px; }
+      .benefits-wrap { padding: 0 24px; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
     }
   </style>
 </head>
 <body>
 
   <!-- NAV -->
-  <nav>
-    <a href="#hero" class="nav-logo">ZozicGames</a>
-    <ul class="nav-links">
-      <li><a href="#game">게임</a></li>
-      <li><a href="#about">회사소개</a></li>
-      <li><a href="#history">연혁</a></li>
-      <li><a href="#benefits">복리후생</a></li>
-      <li><a href="#careers">채용</a></li>
-      <li><a href="#contact">연락처</a></li>
+  <nav id="mainNav">
+    <a href="#hero" class="nav-logo">
+      <img src="Ci_Logo.png" alt="ZozicGames" />
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="메뉴">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">ABOUT</a></li>
+      <li><a href="#game">GAMES</a></li>
+      <li><a href="#benefits">BENEFITS</a></li>
+      <li><a href="#careers">CAREERS</a></li>
     </ul>
   </nav>
 
+  <!-- 점 네비 -->
+  <div class="dot-nav" id="dotNav">
+    <button data-index="0"></button>
+    <button data-index="1"></button>
+    <button data-index="2"></button>
+    <button data-index="3"></button>
+    <button data-index="4"></button>
+  </div>
+
   <!-- HERO -->
   <section id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-grid"></div>
+    <img src="Ci_small2.png" alt="" class="hero-watermark" />
+    <div class="hero-glow"></div>
     <div class="hero-content">
-      <div class="hero-tag">// Indie Game Studio · Seoul, Korea</div>
-      <h1 class="hero-title">
-        작은 팀,<br><span>진짜</span> 게임
-      </h1>
-      <p class="hero-sub">
-        주식회사 조직게임즈는 손 안의 작은 화면에서<br>
-        진짜 재미를 만드는 인디 게임 스튜디오입니다.
-      </p>
-      <div class="hero-cta">
-        <a href="#game" class="btn btn-primary">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          게임 보기
-        </a>
-        <a href="#careers" class="btn btn-secondary">채용 중</a>
+      <div class="hero-text">
+        <div class="hero-label">// Mobile Game Studio</div>
+        <h1 class="hero-title">
+          누구보다 즐겁게<br>
+          <span>게임을 만드는 회사</span>
+        </h1>
+        <p class="hero-sub">
+          주식회사 조직게임즈는 창의적이고 재미있는<br>
+          게임을 만드는 인디 모바일 게임 스튜디오입니다.
+        </p>
+        <div class="hero-btns">
+          <a href="#game" class="btn btn-primary">게임 보기</a>
+          <a href="#careers" class="btn btn-secondary">채용 중</a>
+        </div>
       </div>
     </div>
-  </section>
-
-  <!-- GAME -->
-  <section id="game">
-    <div class="game-inner">
-      <div class="game-screenshots reveal">
-        <div class="screenshot-placeholder">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>
-          </svg>
-          스크린샷 1
-        </div>
-        <div class="screenshot-placeholder">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>
-          </svg>
-          스크린샷 2
-        </div>
-        <div class="screenshot-placeholder">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>
-          </svg>
-          스크린샷 3
-        </div>
-      </div>
-
-      <div class="game-info reveal">
-        <div class="section-label">// Latest Release</div>
-        <div class="game-badge">
-          <span>●</span> 출시 중
-        </div>
-        <h2 class="game-title">스킬 마법사<br>키우기</h2>
-        <p class="game-desc">
-          마법사를 키우고, 스킬을 조합하고, 던전을 정복하라.<br>
-          단순한 듯 깊은 성장의 재미가 손안에 펼쳐집니다.
-        </p>
-
-        <div class="store-links">
-          <!-- Google Play 링크: href="여기에_구글플레이_링크" 로 교체하세요 -->
-          <a href="#" class="store-btn">
-            <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3.18 23.76c.3.17.64.24.99.2l12.7-11.7-2.9-2.9L3.18 23.76zM20.9 10.04l-2.6-1.5-3.23 2.96 3.23 2.96 2.63-1.52c.75-.43.75-1.47-.03-1.9zM2.01 1.05C1.7 1.37 1.5 1.85 1.5 2.45v19.1c0 .6.2 1.08.52 1.4l.08.07L13 12.01v-.02L2.01.98l-.01.07zM13.97 8.96l-2.97-2.97-8.01-4.62 10.8 9.9 2.9-2.9-2.72.59z"/>
-            </svg>
-            <div class="store-text">
-              <small>GET IT ON</small>
-              <strong>Google Play</strong>
-            </div>
-          </a>
-          <!-- App Store 링크: href="여기에_앱스토어_링크" 로 교체하세요 -->
-          <a href="#" class="store-btn">
-            <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-            </svg>
-            <div class="store-text">
-              <small>DOWNLOAD ON THE</small>
-              <strong>App Store</strong>
-            </div>
-          </a>
-        </div>
-
-        <!-- 유튜브 링크: onclick에서 URL 교체하세요 -->
-        <div class="video-placeholder" onclick="alert('여기에 유튜브 영상 링크를 연결하세요')">
-          <div class="play-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          </div>
-          <span>게임플레이 영상 보기</span>
-        </div>
-      </div>
+    <div class="scroll-down">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      SCROLL DOWN
     </div>
   </section>
 
   <!-- ABOUT -->
   <section id="about">
-    <div class="about-inner">
-      <div class="about-text reveal">
+    <div class="about-wrap">
+      <div class="reveal">
         <div class="section-label">// About Us</div>
-        <h2 class="section-title">조직게임즈<br>소개</h2>
-        <p>
-          <strong>주식회사 조직게임즈</strong>는 서울에 위치한 인디 모바일 게임 스튜디오입니다.
-          거대한 조직이 만드는 게임이 아닌, 작고 단단한 팀이 진심으로 만드는 게임을 추구합니다.
-        </p>
-        <p>
-          우리는 유행을 좇는 대신 <strong>우리가 직접 재미있게 플레이하고 싶은 게임</strong>을 만듭니다.
-          빠른 실행, 빠른 실패, 빠른 개선. 인디 스튜디오만이 가질 수 있는
-          속도와 자유로움이 우리의 경쟁력입니다.
-        </p>
-        <p>
-          화려한 슬로건보다 <strong>실제로 동작하는 게임</strong>이 우리의 언어입니다.
-        </p>
+        <h2 class="section-title">ABOUT<br>ZOZIC GAMES</h2>
+        <div class="about-desc">
+          <p><strong>주식회사 조직게임즈</strong>는 창의적이고 재미있는 게임을 만드는 인디 모바일 게임 스튜디오입니다.</p>
+          <p>소규모 팀이 하나의 프로젝트를 처음부터 끝까지 <strong>주도적으로 이끌어가며</strong>, 빠르게 만들고 빠르게 개선합니다.</p>
+        </div>
       </div>
-
-      <div class="stat-grid reveal">
-        <div class="stat-card">
-          <div class="num">2025</div>
-          <div class="label">설립연도</div>
+      <div class="reveal">
+        <div class="history-label">// History</div>
+        <h2 class="history-title">ZOZIC<br>HISTORY</h2>
+        <div class="history-year">2025.</div>
+        <div class="history-item">
+          <div class="history-month">04월</div>
+          <span>스킬 마법사 키우기 글로벌 출시</span>
         </div>
-        <div class="stat-card">
-          <div class="num">1+</div>
-          <div class="label">출시 게임</div>
-        </div>
-        <div class="stat-card">
-          <div class="num">Seoul</div>
-          <div class="label">본사 위치</div>
-        </div>
-        <div class="stat-card">
-          <div class="num">100%</div>
-          <div class="label">인디 정신</div>
+        <div class="history-item">
+          <div class="history-month">02월</div>
+          <span>주식회사 조직게임즈 설립</span>
         </div>
       </div>
     </div>
+    <div class="scroll-down">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      SCROLL DOWN
+    </div>
   </section>
 
-  <!-- HISTORY -->
-  <section id="history">
-    <div class="history-inner">
-      <div class="section-label reveal">// Our Journey</div>
-      <h2 class="section-title reveal">우리의<br>여정</h2>
+  <!-- GAME -->
+  <section id="game">
+    <video class="game-video-bg" autoplay muted loop playsinline>
+      <source src="movie_003.mp4" type="video/mp4">
+    </video>
+    <img src="title_illust.png" alt="스킬 마법사 키우기" class="game-keyart-bg" />
+    <div class="game-overlay"></div>
 
-      <div class="timeline reveal">
-        <div class="timeline-item">
-          <div class="timeline-date">2025. 02</div>
-          <div class="timeline-dot"></div>
-          <div class="timeline-content">
-            <h3>주식회사 조직게임즈 설립</h3>
-            <p>작지만 진짜 게임을 만들겠다는 마음 하나로 첫걸음을 내딛었습니다.</p>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-date">2025. 04</div>
-          <div class="timeline-dot"></div>
-          <div class="timeline-content">
-            <h3>스킬 마법사 키우기 출시</h3>
-            <p>첫 번째 타이틀, 글로벌 마켓 동시 출시.</p>
-          </div>
-        </div>
+    <div class="game-top-links">
+      <a href="https://game.naver.com/lounge/Skill_Wizard_Idle/home" target="_blank" class="game-top-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727z"/></svg>
+        네이버 라운지
+      </a>
+    </div>
+
+    <div class="game-info reveal">
+      <h2 class="game-title">스킬 마법사 키우기</h2>
+      <p class="game-desc">마법사를 키우고, 스킬을 조합하고, 던전을 정복하라.<br>단순한 듯 깊은 성장의 재미가 손안에 펼쳐집니다.</p>
+      <div class="store-links">
+        <a href="https://play.google.com/store/apps/details?id=com.zozicgames.skillwizardIdle" target="_blank" class="store-btn">
+          <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.24.99.2l12.7-11.7-2.9-2.9L3.18 23.76zM20.9 10.04l-2.6-1.5-3.23 2.96 3.23 2.96 2.63-1.52c.75-.43.75-1.47-.03-1.9zM2.01 1.05C1.7 1.37 1.5 1.85 1.5 2.45v19.1c0 .6.2 1.08.52 1.4l.08.07L13 12.01v-.02L2.01.98l-.01.07zM13.97 8.96l-2.97-2.97-8.01-4.62 10.8 9.9 2.9-2.9-2.72.59z"/></svg>
+          <div class="store-text"><small>GET IT ON</small><strong>Google Play</strong></div>
+        </a>
+        <a href="https://apps.apple.com/kr/app/id6743432461" target="_blank" class="store-btn">
+          <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          <div class="store-text"><small>Download on the</small><strong>App Store</strong></div>
+        </a>
+        <a href="https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=0001000359" target="_blank" class="store-btn" style="background:#e2001a; border-color:rgba(255,255,255,0.2);">
+          <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="white"/><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#e2001a" font-family="Arial">1</text></svg>
+          <div class="store-text"><small>Download on the</small><strong>ONE store</strong></div>
+        </a>
       </div>
+    </div>
+
+    <div class="scroll-down">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      SCROLL DOWN
     </div>
   </section>
 
   <!-- BENEFITS -->
   <section id="benefits">
-    <div class="benefits-inner">
-      <div class="section-label reveal">// Benefits</div>
-      <h2 class="section-title reveal">복리후생</h2>
+    <div class="benefits-wrap">
+      <div class="reveal">
+        <div class="section-label">// Benefits</div>
+        <h2 class="section-title" style="color:#111;">Welfare Benefit</h2>
+      </div>
       <div class="benefits-grid reveal">
         <div class="benefit-card">
           <div class="benefit-icon">🕐</div>
-          <div class="benefit-title">유연근무제</div>
-          <p class="benefit-desc">출근 시간을 9시~11시 사이에서 자유롭게 선택. 내 리듬대로 일합니다.</p>
+          <div><div class="benefit-title">유연근무제</div><p class="benefit-desc">9시~11시 자율 출근</p></div>
         </div>
         <div class="benefit-card">
           <div class="benefit-icon">🍱</div>
-          <div class="benefit-title">점심 식권 제공</div>
-          <p class="benefit-desc">매일 점심 식권을 제공합니다. 밥 걱정 없이 일에 집중하세요.</p>
+          <div><div class="benefit-title">중식 제공</div><p class="benefit-desc">매일 점심 식권 제공</p></div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">☕</div>
+          <div><div class="benefit-title">간식 & 커피 무제한</div><p class="benefit-desc">사내 간식 및 커피 무제한 제공</p></div>
         </div>
         <div class="benefit-card">
           <div class="benefit-icon">🎂</div>
-          <div class="benefit-title">생일 반차</div>
-          <p class="benefit-desc">생일에는 오후를 드립니다. 소중한 날은 소중한 사람과 함께.</p>
+          <div><div class="benefit-title">생일 축하 혜택</div><p class="benefit-desc">생일 오후 반차 지원</p></div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🎁</div>
+          <div><div class="benefit-title">경조사 지원</div><p class="benefit-desc">명절 선물 및 각종 경조사비 지원</p></div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🏆</div>
+          <div><div class="benefit-title">장기근속 혜택</div><p class="benefit-desc">장기 근속 포상</p></div>
         </div>
       </div>
+    </div>
+    <div class="scroll-down dark">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      SCROLL DOWN
     </div>
   </section>
 
   <!-- CAREERS -->
   <section id="careers">
-    <div class="careers-inner">
-      <div class="careers-header reveal">
-        <div>
-          <div class="section-label">// Careers</div>
-          <h2 class="section-title">함께<br>만들어요</h2>
-        </div>
-        <p class="careers-desc">
-          조직게임즈는 직함보다 <strong style="color:var(--text)">실력</strong>을,
-          경력보다 <strong style="color:var(--text)">열정</strong>을 봅니다.
-          회의보다 실행을 좋아하고, 보고보다 결과를 중요시하는 분과 함께하고 싶습니다.
-          작은 팀이기에 한 명 한 명의 영향력이 크고, 그만큼 성장도 빠릅니다.
-        </p>
-      </div>
-
-      <div class="values-grid reveal">
-        <div class="value-card">
-          <div class="value-icon">🔥</div>
-          <div class="value-title">실행력</div>
-          <p class="value-desc">
-            고민보다 실행을 먼저 합니다. 완벽한 계획보다 빠른 프로토타입이 더 많은 걸 알려줍니다.
-          </p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon">🎮</div>
-          <div class="value-title">게이머 마인드</div>
-          <p class="value-desc">
-            게임을 사랑하는 사람이 좋은 게임을 만듭니다. 직접 플레이하고 느끼고 개선합니다.
-          </p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon">🌱</div>
-          <div class="value-title">자기주도 성장</div>
-          <p class="value-desc">
-            누가 시켜서 하는 공부보다, 스스로 찾아서 배우는 사람이 더 멀리 갑니다.
-          </p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon">🤝</div>
-          <div class="value-title">솔직한 소통</div>
-          <p class="value-desc">
-            작은 팀에서 말하지 않으면 존재하지 않는 것과 같습니다. 좋은 것도 나쁜 것도 솔직하게.
-          </p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon">⚡</div>
-          <div class="value-title">속도</div>
-          <p class="value-desc">
-            인디의 최대 무기는 속도입니다. 빠르게 만들고, 빠르게 배우고, 빠르게 다시 만듭니다.
-          </p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon">🎯</div>
-          <div class="value-title">주인의식</div>
-          <p class="value-desc">
-            내 업무의 범위를 좁게 정의하지 않습니다. 게임 전체가 내 작품이라는 마음으로 임합니다.
-          </p>
-        </div>
-      </div>
-
-      <div class="open-positions reveal">
-        <div class="positions-title">// 현재 채용 포지션</div>
-        <div class="position-item">
-          <span class="position-name">Unity 게임 개발자</span>
-          <span class="position-type">상시채용</span>
-          <span class="position-arrow">→</span>
-        </div>
-        <div class="position-item">
-          <span class="position-name">2D 게임 아티스트</span>
-          <span class="position-type">상시채용</span>
-          <span class="position-arrow">→</span>
-        </div>
-        <div class="position-item">
-          <span class="position-name">게임 기획자</span>
-          <span class="position-type">상시채용</span>
-          <span class="position-arrow">→</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="section-label">// Contact</div>
-    <h2 class="section-title">연락하기</h2>
-    <p class="contact-sub reveal">채용 문의, 퍼블리싱 제안, 협업 아이디어 무엇이든 환영합니다.</p>
-    <div class="contact-links reveal">
-      <!-- 이메일 교체: href="mailto:your@email.com" -->
-      <a href="mailto:contact@zozicgames.com" class="btn btn-primary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        이메일 보내기
+    <div class="careers-wrap reveal">
+      <div class="section-label" style="justify-content:center; display:flex; margin-bottom:16px;">// Careers</div>
+      <h2 class="careers-title">Careers</h2>
+      <p class="careers-desc">
+        게임을 좋아하고,<br>
+        <strong>함께 즐거움을 만들어갈 분들</strong>을 찾습니다.
+      </p>
+      <a href="https://www.gamejob.co.kr/Company/Detail?M=49823279" target="_blank" class="btn btn-primary" style="font-size:1rem; padding:16px 48px;">
+        채용공고 확인하기
       </a>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <div class="footer-logo">ZozicGames</div>
-    <div>© 2025 주식회사 조직게임즈. All rights reserved.</div>
-    <div>Seoul, Korea</div>
+    <img src="Ci_Logo.png" alt="ZozicGames" />
+    <div style="text-align: center;">
+      <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-weight: 500; margin-bottom: 4px;">Zozic Games Inc.</p>
+      <p style="color: rgba(255,255,255,0.25); font-size: 0.68rem; font-family: 'Space Mono', monospace; margin-bottom: 4px;">사업자 등록번호 830-88-03459</p>
+      <p style="color: rgba(255,255,255,0.25); font-size: 0.68rem; font-family: 'Space Mono', monospace;">© 2025 Zozic Games Inc. All rights reserved.</p>
+    </div>
+    <a href="https://www.youtube.com/@zozicgames.official" target="_blank" style="color: rgba(255,255,255,0.4); transition: color 0.2s;" onmouseover="this.style.color='#ff0000'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+      </svg>
+    </a>
   </footer>
 
   <script>
-    // Scroll reveal
+    const sectionEls = Array.from(document.querySelectorAll('section[id]'));
+    const dotNav = document.getElementById('dotNav');
+    const dots = dotNav.querySelectorAll('button');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const mainNav = document.getElementById('mainNav');
+    const hamburger = document.getElementById('hamburger');
+    const navLinksEl = document.getElementById('navLinks');
+
+    let currentIndex = 0;
+    let isScrolling = false;
+
+    // 네비 스크롤 효과
+    window.addEventListener('scroll', () => {
+      mainNav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // 햄버거
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      navLinksEl.classList.toggle('open');
+    });
+
+    navLinksEl.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        navLinksEl.classList.remove('open');
+      });
+    });
+
+    // 섹션 이동
+    function goToSection(index) {
+      if (index < 0 || index >= sectionEls.length) return;
+      currentIndex = index;
+      isScrolling = true;
+      sectionEls[index].scrollIntoView({ behavior: 'smooth' });
+      updateUI(index);
+      setTimeout(() => { isScrolling = false; }, 900);
+    }
+
+    function updateUI(index) {
+      dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      dotNav.classList.toggle('light', index === 3);
+      const id = sectionEls[index].id;
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        const href = link.getAttribute('href').replace('#', '');
+        if ((id === 'hero' || id === 'about') && href === 'about') link.classList.add('active');
+        else if (href === id) link.classList.add('active');
+      });
+    }
+
+    // 휠
+    window.addEventListener('wheel', e => {
+      if (isScrolling) return;
+      goToSection(e.deltaY > 0 ? currentIndex + 1 : currentIndex - 1);
+    }, { passive: true });
+
+    // 터치
+    let touchStartY = 0;
+    window.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
+    window.addEventListener('touchend', e => {
+      if (isScrolling) return;
+      const diff = touchStartY - e.changedTouches[0].clientY;
+      if (Math.abs(diff) > 50) goToSection(diff > 0 ? currentIndex + 1 : currentIndex - 1);
+    }, { passive: true });
+
+    // 점 클릭
+    dots.forEach((d, i) => d.addEventListener('click', () => goToSection(i)));
+
+    // 네비 링크
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const href = link.getAttribute('href').replace('#', '');
+        const idx = sectionEls.findIndex(s => s.id === href);
+        if (idx !== -1) goToSection(idx);
+      });
+    });
+
+    // Reveal
     const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver(entries => {
+    const revealObs = new IntersectionObserver(entries => {
       entries.forEach((e, i) => {
         if (e.isIntersecting) {
-          setTimeout(() => e.target.classList.add('visible'), i * 80);
-          observer.unobserve(e.target);
+          setTimeout(() => e.target.classList.add('visible'), i * 100);
+          revealObs.unobserve(e.target);
         }
       });
     }, { threshold: 0.1 });
-    reveals.forEach(el => observer.observe(el));
+    reveals.forEach(el => revealObs.observe(el));
+
+    updateUI(0);
   </script>
 </body>
 </html>
