@@ -21,7 +21,7 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scrollbar-width: none; scroll-behavior: smooth; }
+    html { scrollbar-width: none; scroll-behavior: smooth; scroll-snap-type: y mandatory; overflow-y: scroll; }
     html::-webkit-scrollbar { display: none; }
 
     body {
@@ -31,6 +31,8 @@
       font-weight: 400;
       overflow-x: hidden;
     }
+
+    footer { scroll-snap-align: start; }
 
     /* NAV */
     nav {
@@ -167,11 +169,15 @@
     /* SECTIONS */
     section {
       position: relative;
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
     }
+
+    #game { scroll-snap-align: start; scroll-snap-stop: always; }
 
     /* HERO */
     #hero { background: #0c0c0c; overflow: hidden; }
@@ -391,25 +397,26 @@
     #benefits { background: #f7f7f7; }
 
     .benefits-wrap { width: 100%; max-width: 1100px; padding: 0 56px; }
-    #benefits .section-label { color: var(--accent); }
+    #benefits .section-label { color: var(--accent); margin-bottom: 8px; }
+    #benefits .section-title { color: #111; font-size: clamp(1.8rem, 3.5vw, 2.8rem); margin-bottom: 0; }
 
-    .benefits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 36px; }
+    .benefits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 20px; }
 
     .benefit-card {
       background: #fff;
       border: 1px solid #eee;
-      border-radius: 10px;
-      padding: 22px 24px;
+      border-radius: 8px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 14px;
       transition: box-shadow 0.2s, transform 0.2s;
     }
 
     .benefit-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); transform: translateY(-2px); }
-    .benefit-icon { font-size: 1.8rem; width: 44px; text-align: center; flex-shrink: 0; }
-    .benefit-title { font-size: 0.92rem; font-weight: 700; color: #111; margin-bottom: 3px; }
-    .benefit-desc { font-size: 0.78rem; color: #888; line-height: 1.5; }
+    .benefit-icon { font-size: 1.4rem; width: 36px; text-align: center; flex-shrink: 0; }
+    .benefit-title { font-size: 0.85rem; font-weight: 700; color: #111; margin-bottom: 2px; }
+    .benefit-desc { font-size: 0.72rem; color: #888; line-height: 1.4; }
 
     /* CAREERS */
     #careers { background: #0c0c0c; }
@@ -471,15 +478,21 @@
       .nav-links a::after { display: none; }
       .dot-nav { display: none; }
       .hero-content { padding: 0 24px; justify-content: center; }
-      .hero-text { text-align: center; }
-      .hero-btns { justify-content: center; }
+      .hero-text { text-align: center; max-width: 100%; }
+      .hero-btns { justify-content: center; flex-wrap: wrap; }
+      .hero-title { font-size: clamp(1.8rem, 7vw, 2.5rem); }
+      .hero-sub { font-size: 0.85rem; }
       .about-wrap { grid-template-columns: 1fr; gap: 48px; padding: 0 24px; }
       .history-title, .history-label { text-align: left; }
       .game-info { padding: 0 24px 60px; }
       .game-top-links { right: 24px; top: 80px; }
       .store-btn { flex: 1; min-width: 140px; }
-      .benefits-wrap { padding: 0 24px; }
-      .benefits-grid { grid-template-columns: 1fr; }
+      .benefits-wrap { padding: 0 16px; }
+      .benefits-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .benefit-card { padding: 12px 14px; gap: 10px; }
+      .benefit-icon { font-size: 1.2rem; width: 30px; }
+      .benefit-title { font-size: 0.78rem; }
+      .benefit-desc { font-size: 0.65rem; }
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
     }
   </style>
@@ -527,8 +540,8 @@
           게임을 만드는 인디 모바일 게임 스튜디오입니다.
         </p>
         <div class="hero-btns">
-          <a href="#game" class="btn btn-primary">게임 보기</a>
-          <a href="#careers" class="btn btn-secondary">채용 중</a>
+          <a href="#game" class="btn btn-primary" id="heroGameBtn">게임 보기</a>
+          <a href="#careers" class="btn btn-secondary" id="heroCareerBtn">채용 중</a>
         </div>
       </div>
     </div>
@@ -555,11 +568,11 @@
         <div class="history-year">2025.</div>
         <div class="history-item">
           <div class="history-month">04월</div>
-          <span>스킬 마법사 키우기 국내 출시</span>
+          <span>스킬 마법사 키우기 글로벌 출시</span>
         </div>
         <div class="history-item">
           <div class="history-month">02월</div>
-          <span>조직 게임즈 법인 설립</span>
+          <span>주식회사 조직게임즈 설립</span>
         </div>
       </div>
     </div>
@@ -721,10 +734,10 @@
       if (index < 0 || index >= sectionEls.length) return;
       currentIndex = index;
       isScrolling = true;
-      sectionEls[index].scrollIntoView({ behavior: 'smooth' });
+      sectionEls[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
       updateUI(index);
       updateNav(index);
-      setTimeout(() => { isScrolling = false; }, 900);
+      setTimeout(() => { isScrolling = false; }, 1000);
     }
 
     function updateUI(index) {
@@ -738,6 +751,17 @@
         else if (href === id) link.classList.add('active');
       });
     }
+
+    // 현재 섹션 추적
+    const sectionTracker = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = sectionEls.findIndex(s => s.id === entry.target.id);
+          if (idx !== -1) currentIndex = idx;
+        }
+      });
+    }, { threshold: 0.5 });
+    sectionEls.forEach(s => sectionTracker.observe(s));
 
     // 휠
     window.addEventListener('wheel', e => {
@@ -761,6 +785,16 @@
     document.querySelector('.nav-logo').addEventListener('click', e => {
       e.preventDefault();
       goToSection(0);
+    });
+
+    // 히어로 버튼
+    document.getElementById('heroGameBtn').addEventListener('click', e => {
+      e.preventDefault();
+      goToSection(2);
+    });
+    document.getElementById('heroCareerBtn').addEventListener('click', e => {
+      e.preventDefault();
+      goToSection(4);
     });
 
     // 네비 링크
