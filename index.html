@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ZozicGames Inc. | 주식회사 조직게임즈</title>
   <meta name="description" content="창의적이고 재미있는 게임을 만드는 인디 모바일 게임 스튜디오, 주식회사 조직게임즈." />
-  <meta name="keywords" content="조직게임즈, ZozicGames, 인디게임, 스킬 마법사 키우기, 모바일게임" />
+  <meta name="keywords" content="조직게임즈, ZozicGames, 인디게임, 왕검 키우기, 스킬 마법사 키우기, 모바일게임" />
   <meta name="google-site-verification" content="eAPUsyw7l68w7uzJ3TaIv9-X7uuGIwLNtL282-ySS7o" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -192,8 +192,6 @@
       justify-content: center;
     }
 
-    #game { align-items: flex-end; }
-
     /* HERO */
     #hero { background: #0c0c0c; overflow: hidden; }
 
@@ -352,7 +350,19 @@
     .history-item span { font-size: 0.9rem; color: rgba(232,232,240,0.8); line-height: 1.6; }
 
     /* GAME */
-    #game { padding: 0; height: 100vh; min-height: 100vh; align-items: flex-end; overflow: hidden; }
+    .game-section { padding: 0; height: 100vh; min-height: 100vh; align-items: flex-end; overflow: hidden; background: #0c0c0c; }
+
+    .game-badge {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: #fff;
+      background: var(--accent);
+      border-radius: 3px;
+      padding: 5px 12px;
+      margin-bottom: 14px;
+    }
 
     .game-video-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
     .game-keyart-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; z-index: 0; }
@@ -537,6 +547,7 @@
     <button data-index="2"></button>
     <button data-index="3"></button>
     <button data-index="4"></button>
+    <button data-index="5"></button>
   </div>
 
   <!-- HERO -->
@@ -602,8 +613,46 @@
     </div>
   </section>
 
-  <!-- GAME -->
-  <section id="game">
+  <!-- GAME: 왕검 키우기 -->
+  <section id="game" class="game-section">
+    <video class="game-video-bg" autoplay muted loop playsinline>
+      <source src="kingsword_movie.mp4" type="video/mp4">
+    </video>
+    <img src="kingsword_illust.png" alt="왕검 키우기" class="game-keyart-bg" />
+    <div class="game-overlay"></div>
+
+    <div class="game-top-links">
+      <a href="https://cafe.naver.com/swordking" target="_blank" class="game-top-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727z"/></svg>
+        네이버 카페
+      </a>
+    </div>
+
+    <div class="game-info reveal">
+      <div class="game-badge">2026.11.24 출시 예정</div>
+      <h2 class="game-title">왕검 키우기 : 방치형 RPG</h2>
+      <p class="game-desc">왕 크니까 왕 쌔다!<br>거대해진 검으로 몰려오는 적을 쓸어버린다.</p>
+      <div class="store-links">
+        <a href="https://play.google.com/store/apps/details?id=com.zozicgames.kingswordidle" target="_blank">
+          <img src="store_btn.png" alt="Google Play" style="height: 52px; width: auto;" />
+        </a>
+        <a href="https://apps.apple.com/kr/app/id6779879945" target="_blank">
+          <img src="store_btn2.png" alt="App Store" style="height: 52px; width: auto;" />
+        </a>
+        <a href="https://m.onestore.co.kr/v2/ko-kr/app/0001009234" target="_blank">
+          <img src="store_btn3.png" alt="ONE store" style="height: 52px; width: auto;" />
+        </a>
+      </div>
+    </div>
+
+    <div class="scroll-down">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      SCROLL DOWN
+    </div>
+  </section>
+
+  <!-- GAME: 스킬 마법사 키우기 -->
+  <section id="game-skillwizard" class="game-section">
     <video class="game-video-bg" autoplay muted loop playsinline>
       <source src="movie_003.mp4" type="video/mp4">
     </video>
@@ -735,7 +784,7 @@
     function updateUI(index) {
       currentIndex = index;
       dots.forEach((d, i) => d.classList.toggle('active', i === index));
-      dotNav.classList.toggle('light', index === 3);
+      dotNav.classList.toggle('light', sectionEls[index].id === 'benefits');
       if (index === 0) mainNav.classList.remove('scrolled');
       else mainNav.classList.add('scrolled');
       const id = sectionEls[index].id;
@@ -743,6 +792,7 @@
         link.classList.remove('active');
         const href = link.getAttribute('href').replace('#', '');
         if ((id === 'hero' || id === 'about') && href === 'about') link.classList.add('active');
+        else if (id.startsWith('game') && href === 'game') link.classList.add('active');
         else if (href === id) link.classList.add('active');
       });
     }
@@ -784,11 +834,11 @@
     // 히어로 버튼
     document.getElementById('heroGameBtn').addEventListener('click', e => {
       e.preventDefault();
-      goToSection(2);
+      goToSection(sectionEls.findIndex(s => s.id === 'game'));
     });
     document.getElementById('heroCareerBtn').addEventListener('click', e => {
       e.preventDefault();
-      goToSection(4);
+      goToSection(sectionEls.findIndex(s => s.id === 'careers'));
     });
 
     // 네비 링크
